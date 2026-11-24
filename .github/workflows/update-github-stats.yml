@@ -1,0 +1,65 @@
+name: Update GitHub stats
+
+# 每天 00:01 (Asia/Shanghai, UTC+8) 刷新贡献日历与语言统计。
+# GitHub 的 cron 用 UTC：16:01 UTC = 次日 00:01 UTC+8。
+# 若想改成其它时区，按「本地时间 - 8 小时」换算，例如 00:01 UTC 就是 '1 0 * * *'。
+on:
+  schedule:
+    - cron: '1 16 * * *'
+  workflow_dispatch: # 支持手动触发，便于首次验证
+
+permissions:
+  contents: write # 需要 push 提交回仓库
+
+concurrency:
+  group: update-github-stats
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 两个抓取步骤允许单独失败：一边挂了也能把另一边的新数据构建并提交，
+      # 失败原因会在最后的「Report fetch failures」里以 error 形式暴露出来。
+      - name: Fetch contributions
+        id: contributions
+        continue-on-error: true
+        run: node fetch-contributions.js
+        env:
+          GITHUB_USER: ${{ github.repository_owner }}
+
+      - name: Fetch languages
+        id: langs
+        continue-on-error: true
+        run: node fetch-langs.js
+        env:
+          GITHUB_USER: ${{ github.repository_owner }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 提高 API 限额，避免 60/h 被限流
+
+      - name: Rebuild output.svg and README.md
+        run: node build.js
+
+      - name: Commit refreshed stats
+        run: |
+          if [ -z "$(git status --porcelain -- github-contributions.json github-langs.json output.svg README.md)" ]; then
+            echo "统计没有变化，跳过提交"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add github-contributions.json github-langs.json output.svg README.md
+          git commit -m "chore: refresh GitHub stats ($(date -u +%Y-%m-%d))"
+          git push
+
+      - name: Report fetch failures
+        if: steps.contributions.outcome == 'failure' || steps.langs.outcome == 'failure'
+        run: |
+          echo "::error::至少一个抓取步骤失败，已提交可用的部分结果，请查看上方日志。"
+          exit 1

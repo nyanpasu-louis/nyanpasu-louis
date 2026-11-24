@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tty1 — boot</title>
+<style>
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("./JetBrainsMono-Regular.ttf") format("truetype");
+    font-display: block;
+  }
+  :root {
+    --bg: #0c1218;
+    --body: #c9d5e2;
+    --dim: #5e7189;
+    --ok: #7bd88f;
+    --warn: #e5b567;
+    --cmd: #ffa8cd;
+    --accent: #79c0ff;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f8fafc;
+      --body: #52627a;
+      --dim: #96a2b2;
+      --ok: #1f883d;
+      --warn: #c2660c;
+      --cmd: #cf3573;
+      --accent: #2b6ce6;
+    }
+  }
+  * { box-sizing: border-box }
+  html, body { height: 100%; margin: 0 }
+  body {
+    background: var(--bg);
+    color: var(--body);
+    font: 15px/1.55 "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-variant-ligatures: none;
+    padding: 26px 30px 48px;
+    overflow-y: auto;
+    transition: opacity .5s ease;
+  }
+  body.gone { opacity: 0 }
+  #screen {
+    max-width: 1080px;
+    margin: 0 auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .line { min-height: 1.55em }
+  .dim { color: var(--dim) }
+  .ok { color: var(--ok); font-weight: 700 }
+  .warn { color: var(--warn) }
+  .accent { color: var(--accent) }
+  .cmd { color: var(--cmd) }
+  .user { color: var(--ok) }
+  .path { color: var(--accent) }
+  .cursor {
+    display: inline-block;
+    width: .6em;
+    height: 1.05em;
+    vertical-align: -.18em;
+    background: var(--cmd);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0 } }
+  #hint {
+    position: fixed;
+    right: 16px;
+    bottom: 12px;
+    color: var(--dim);
+    font-size: 11px;
+    letter-spacing: .04em;
+  }
+</style>
+</head>
+<body>
+<div id="screen"></div>
+<div id="hint">press any key to skip</div>
+<script>
+  const screen = document.getElementById('screen');
+  const hint = document.getElementById('hint');
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const jitter = (ms) => ms + Math.random() * ms * 0.5;
+  let cursor = null;
+  let done = false;
+
+  function moveCursor(el) {
+    if (cursor) cursor.remove();
+    cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    el.appendChild(cursor);
+  }
+
+  function print(html, cls = '') {
+    const el = document.createElement('div');
+    el.className = 'line' + (cls ? ' ' + cls : '');
+    el.innerHTML = html;
+    screen.appendChild(el);
+    moveCursor(el);
+    el.scrollIntoView({ block: 'end' });
+    return el;
+  }
+
+  async function type(prefixHtml, text, speed = 55) {
+    const el = document.createElement('div');
+    el.className = 'line';
+    const prefix = document.createElement('span');
+    prefix.innerHTML = prefixHtml;
+    const typed = document.createElement('span');
+    el.append(prefix, typed);
+    screen.appendChild(el);
+    moveCursor(el);
+    for (const ch of text) {
+      typed.textContent += ch;
+      await wait(jitter(speed));
+      if (done) return el;
+    }
+    el.scrollIntoView({ block: 'end' });
+    return el;
+  }
+
+  const KERNEL_LINES = [
+    ['[    0.000000] Booting <span class="accent">GitHub_Profiles_README</span> kernel 6.12.4-generic (tty1)', ''],
+    ['[    0.000000] Command line: root=/dev/nvme0n1p2 ro quiet', 'dim'],
+    ['[    0.000148] Memory: 32768M/32768M available (8124K kernel code)', ''],
+    ['[    0.041233] smp: Brought up 16 CPUs', ''],
+    ['[    0.078411] ACPI: Core revision 20240827', 'dim'],
+    ['[    0.112907] pci 0000:00:1f.3: audio device disabled by config', 'dim'],
+    ['[    0.144871] usb 1-1: new high-speed USB device number 2 using xhci_hcd', ''],
+    ['[    0.203554] nvme nvme0: 8/0/0 default/read/poll queues', ''],
+    ['[    0.264190] EXT4-fs (nvme0n1p2): mounted (ordered data mode)', ''],
+    ['[    0.318802] systemd[1]: systemd 257.1-1 running in system mode', 'dim'],
+    ['[  <span class="ok">OK</span>  ] Started Journal Service.', ''],
+    ['[  <span class="ok">OK</span>  ] Started Load Kernel Modules.', ''],
+    ['[  <span class="ok">OK</span>  ] Mounted /boot/efi.', ''],
+    ['[  <span class="ok">OK</span>  ] Started udev Kernel Device Manager.', ''],
+    ['[  <span class="ok">OK</span>  ] Reached target Local File Systems.', ''],
+    ['[  <span class="ok">OK</span>  ] Started Network Manager.', ''],
+    ['[  <span class="ok">OK</span>  ] Reached target Multi-User System.', ''],
+    ['[  <span class="ok">OK</span>  ] Started Getty on tty1.', ''],
+  ];
+
+  const BOOT_USER = 'nyanpasulouis';
+  const BOOT_HOST = 'github-profiles-readme';
+  const BOOT_PASSWORD = '*************';
+  const PROMPT = `<span class="user">${BOOT_USER}@${BOOT_HOST}</span>:<span class="path">~</span>$ `;
+
+  async function boot() {
+    for (const [text, cls] of KERNEL_LINES) {
+      print(text, cls);
+      await wait(jitter(90));
+      if (done) return;
+    }
+
+    await wait(320);
+    print('');
+    print('<span class="accent">GitHub_Profiles_README</span> 6.12.4 tty1');
+    print('');
+
+    const login = print(`<span class="dim">${BOOT_HOST} login:</span> `);
+    for (const ch of BOOT_USER) {
+      login.insertBefore(document.createTextNode(ch), cursor);
+      await wait(jitter(70));
+      if (done) return;
+    }
+    await wait(260);
+
+    const password = print('<span class="dim">Password:</span> ');
+    const stars = document.createTextNode('');
+    password.insertBefore(stars, cursor);
+    for (const ch of BOOT_PASSWORD) {
+      stars.textContent += ch;
+      await wait(jitter(45));
+      if (done) return;
+    }
+    await wait(220);
+
+    print('<span class="dim">Last login: Mon Nov 24 21:58:07 2026 from 192.168.1.7</span>');
+    print('');
+    print('Welcome to <span class="accent">GitHub_Profiles_README</span> 6.12.4 (GNU/Linux 6.12.4-generic x86_64)');
+    print('');
+    print('  System load:  0.07            Memory: 12%     Processes: 214');
+    print('  IPv4 address: 192.168.1.7     Users logged in: 1');
+    print('');
+    await wait(300);
+    if (done) return;
+
+    await type(PROMPT, 'cat README.md', 42);
+    await wait(420);
+    if (done) return;
+
+    print('<span class="dim">opening ./output.svg … </span><span class="ok">done</span>', '');
+    await wait(480);
+    finish();
+  }
+
+  function finish() {
+    if (done) return;
+    done = true;
+    hint.remove();
+    document.body.classList.add('gone');
+    setTimeout(() => { location.replace('./output.svg'); }, 480);
+  }
+
+  window.addEventListener('keydown', finish);
+  window.addEventListener('pointerdown', finish);
+
+  boot();
+</script>
+</body>
+</html>
