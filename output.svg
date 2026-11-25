@@ -561,7 +561,7 @@
     <text class="ch md-h" style="animation-delay:5230ms" x="465" y="165" xml:space="preserve"> </text>
     <text class="ch md-h" style="animation-delay:5250ms" x="474" y="165" xml:space="preserve">·</text>
     <text class="ch md-h" style="animation-delay:5270ms" x="483" y="165" xml:space="preserve"> </text>
-    <text class="ch md-h" style="animation-delay:5290ms" x="492" y="165" xml:space="preserve">4</text>
+    <text class="ch md-h" style="animation-delay:5290ms" x="492" y="165" xml:space="preserve">5</text>
     <text class="ch md-h" style="animation-delay:5310ms" x="501" y="165" xml:space="preserve"> </text>
     <text class="ch md-h" style="animation-delay:5330ms" x="510" y="165" xml:space="preserve">r</text>
     <text class="ch md-h" style="animation-delay:5350ms" x="519" y="165" xml:space="preserve">e</text>
@@ -571,33 +571,33 @@
   </g>
   <!-- language bar · 328px wide, starts at 420px -->
   <g class="langbar" aria-hidden="true">
-    <rect class="langbar-cell lang-js" x="420" y="176" width="118" height="14" style="animation-delay:5830ms"/>
-    <rect class="langbar-cell lang-py" x="538" y="176" width="115" height="14" style="animation-delay:5920ms"/>
-    <rect class="langbar-cell lang-css" x="653" y="176" width="69" height="14" style="animation-delay:6010ms"/>
-    <rect class="langbar-cell lang-html" x="722" y="176" width="26" height="14" style="animation-delay:6100ms"/>
+    <rect class="langbar-cell lang-py" x="420" y="176" width="151" height="14" style="animation-delay:5830ms"/>
+    <rect class="langbar-cell lang-js" x="571" y="176" width="131" height="14" style="animation-delay:5920ms"/>
+    <rect class="langbar-cell lang-css" x="702" y="176" width="33" height="14" style="animation-delay:6010ms"/>
+    <rect class="langbar-cell lang-html" x="735" y="176" width="13" height="14" style="animation-delay:6100ms"/>
   </g>
   <!-- line 00 · langs · right · first char at 6410ms, last at 6970ms -->
   <g>
-    <text class="ch lang-js" style="animation-delay:6410ms" x="420" y="217" xml:space="preserve">J</text>
-    <text class="ch lang-js" style="animation-delay:6430ms" x="429" y="217" xml:space="preserve">S</text>
-    <text class="ch lang-js" style="animation-delay:6450ms" x="438" y="217" xml:space="preserve"> </text>
-    <text class="ch lang-js" style="animation-delay:6470ms" x="447" y="217" xml:space="preserve">3</text>
-    <text class="ch lang-js" style="animation-delay:6490ms" x="456" y="217" xml:space="preserve">6</text>
-    <text class="ch lang-js" style="animation-delay:6510ms" x="465" y="217" xml:space="preserve">%</text>
+    <text class="ch lang-py" style="animation-delay:6410ms" x="420" y="217" xml:space="preserve">P</text>
+    <text class="ch lang-py" style="animation-delay:6430ms" x="429" y="217" xml:space="preserve">y</text>
+    <text class="ch lang-py" style="animation-delay:6450ms" x="438" y="217" xml:space="preserve"> </text>
+    <text class="ch lang-py" style="animation-delay:6470ms" x="447" y="217" xml:space="preserve">4</text>
+    <text class="ch lang-py" style="animation-delay:6490ms" x="456" y="217" xml:space="preserve">6</text>
+    <text class="ch lang-py" style="animation-delay:6510ms" x="465" y="217" xml:space="preserve">%</text>
     <text class="ch md-body" style="animation-delay:6530ms" x="474" y="217" xml:space="preserve"> </text>
-    <text class="ch lang-py" style="animation-delay:6550ms" x="483" y="217" xml:space="preserve">P</text>
-    <text class="ch lang-py" style="animation-delay:6570ms" x="492" y="217" xml:space="preserve">y</text>
-    <text class="ch lang-py" style="animation-delay:6590ms" x="501" y="217" xml:space="preserve"> </text>
-    <text class="ch lang-py" style="animation-delay:6610ms" x="510" y="217" xml:space="preserve">3</text>
-    <text class="ch lang-py" style="animation-delay:6630ms" x="519" y="217" xml:space="preserve">5</text>
-    <text class="ch lang-py" style="animation-delay:6650ms" x="528" y="217" xml:space="preserve">%</text>
+    <text class="ch lang-js" style="animation-delay:6550ms" x="483" y="217" xml:space="preserve">J</text>
+    <text class="ch lang-js" style="animation-delay:6570ms" x="492" y="217" xml:space="preserve">S</text>
+    <text class="ch lang-js" style="animation-delay:6590ms" x="501" y="217" xml:space="preserve"> </text>
+    <text class="ch lang-js" style="animation-delay:6610ms" x="510" y="217" xml:space="preserve">4</text>
+    <text class="ch lang-js" style="animation-delay:6630ms" x="519" y="217" xml:space="preserve">0</text>
+    <text class="ch lang-js" style="animation-delay:6650ms" x="528" y="217" xml:space="preserve">%</text>
     <text class="ch md-body" style="animation-delay:6670ms" x="537" y="217" xml:space="preserve"> </text>
     <text class="ch lang-css" style="animation-delay:6690ms" x="546" y="217" xml:space="preserve">C</text>
     <text class="ch lang-css" style="animation-delay:6710ms" x="555" y="217" xml:space="preserve">S</text>
     <text class="ch lang-css" style="animation-delay:6730ms" x="564" y="217" xml:space="preserve">S</text>
     <text class="ch lang-css" style="animation-delay:6750ms" x="573" y="217" xml:space="preserve"> </text>
-    <text class="ch lang-css" style="animation-delay:6770ms" x="582" y="217" xml:space="preserve">2</text>
-    <text class="ch lang-css" style="animation-delay:6790ms" x="591" y="217" xml:space="preserve">1</text>
+    <text class="ch lang-css" style="animation-delay:6770ms" x="582" y="217" xml:space="preserve">1</text>
+    <text class="ch lang-css" style="animation-delay:6790ms" x="591" y="217" xml:space="preserve">0</text>
     <text class="ch lang-css" style="animation-delay:6810ms" x="600" y="217" xml:space="preserve">%</text>
     <text class="ch md-body" style="animation-delay:6830ms" x="609" y="217" xml:space="preserve"> </text>
     <text class="ch lang-html" style="animation-delay:6850ms" x="618" y="217" xml:space="preserve">H</text>
@@ -605,7 +605,7 @@
     <text class="ch lang-html" style="animation-delay:6890ms" x="636" y="217" xml:space="preserve">M</text>
     <text class="ch lang-html" style="animation-delay:6910ms" x="645" y="217" xml:space="preserve">L</text>
     <text class="ch lang-html" style="animation-delay:6930ms" x="654" y="217" xml:space="preserve"> </text>
-    <text class="ch lang-html" style="animation-delay:6950ms" x="663" y="217" xml:space="preserve">8</text>
+    <text class="ch lang-html" style="animation-delay:6950ms" x="663" y="217" xml:space="preserve">4</text>
     <text class="ch lang-html" style="animation-delay:6970ms" x="672" y="217" xml:space="preserve">%</text>
   </g>
   <!-- line 00 · heading · right · first char at 7890ms, last at 8410ms -->
@@ -866,7 +866,7 @@
     <rect class="heat-cell heat-0" x="730" y="349" width="8" height="8" rx="1" style="animation-delay:9024ms"/>
     <rect class="heat-cell heat-0" x="740" y="289" width="8" height="8" rx="1" style="animation-delay:9038ms"/>
     <rect class="heat-cell heat-1" x="740" y="299" width="8" height="8" rx="1" style="animation-delay:9038ms"/>
-    <rect class="heat-cell heat-1" x="740" y="309" width="8" height="8" rx="1" style="animation-delay:9038ms"/>
+    <rect class="heat-cell heat-2" x="740" y="309" width="8" height="8" rx="1" style="animation-delay:9038ms"/>
     <rect class="heat-cell heat-0" x="740" y="319" width="8" height="8" rx="1" style="animation-delay:9038ms"/>
     <rect class="heat-cell heat-0" x="740" y="329" width="8" height="8" rx="1" style="animation-delay:9038ms"/>
     <rect class="heat-cell heat-0" x="740" y="339" width="8" height="8" rx="1" style="animation-delay:9038ms"/>
@@ -1338,16 +1338,16 @@
     <text class="ch md-cmd" style="animation-delay:22918ms" x="129" y="867" xml:space="preserve">1</text>
     <text class="ch md-cmd" style="animation-delay:22938ms" x="138" y="867" xml:space="preserve">-</text>
     <text class="ch md-cmd" style="animation-delay:22958ms" x="147" y="867" xml:space="preserve">2</text>
-    <text class="ch md-cmd" style="animation-delay:22978ms" x="156" y="867" xml:space="preserve">4</text>
+    <text class="ch md-cmd" style="animation-delay:22978ms" x="156" y="867" xml:space="preserve">5</text>
     <text class="ch md-cmd" style="animation-delay:22998ms" x="165" y="867" xml:space="preserve"> </text>
-    <text class="ch md-cmd" style="animation-delay:23018ms" x="174" y="867" xml:space="preserve">2</text>
-    <text class="ch md-cmd" style="animation-delay:23038ms" x="183" y="867" xml:space="preserve">2</text>
+    <text class="ch md-cmd" style="animation-delay:23018ms" x="174" y="867" xml:space="preserve">0</text>
+    <text class="ch md-cmd" style="animation-delay:23038ms" x="183" y="867" xml:space="preserve">8</text>
     <text class="ch md-cmd" style="animation-delay:23058ms" x="192" y="867" xml:space="preserve">:</text>
-    <text class="ch md-cmd" style="animation-delay:23078ms" x="201" y="867" xml:space="preserve">1</text>
-    <text class="ch md-cmd" style="animation-delay:23098ms" x="210" y="867" xml:space="preserve">2</text>
+    <text class="ch md-cmd" style="animation-delay:23078ms" x="201" y="867" xml:space="preserve">3</text>
+    <text class="ch md-cmd" style="animation-delay:23098ms" x="210" y="867" xml:space="preserve">3</text>
     <text class="ch md-cmd" style="animation-delay:23118ms" x="219" y="867" xml:space="preserve">:</text>
     <text class="ch md-cmd" style="animation-delay:23138ms" x="228" y="867" xml:space="preserve">2</text>
-    <text class="ch md-cmd" style="animation-delay:23158ms" x="237" y="867" xml:space="preserve">3</text>
+    <text class="ch md-cmd" style="animation-delay:23158ms" x="237" y="867" xml:space="preserve">0</text>
     <text class="ch md-cmd" style="animation-delay:23178ms" x="246" y="867" xml:space="preserve"> </text>
     <text class="ch md-cmd" style="animation-delay:23198ms" x="255" y="867" xml:space="preserve">(</text>
     <text class="ch md-cmd" style="animation-delay:23218ms" x="264" y="867" xml:space="preserve">G</text>

@@ -1,22 +1,27 @@
 {
   "user": "nyanpasu-louis",
-  "fetchedAt": "2026-11-20T08:23:53.162Z",
-  "repoCount": 4,
+  "fetchedAt": "2026-11-25T00:33:20.188Z",
+  "repoCount": 5,
   "repos": [
     {
-      "name": "AcaAtlas",
+      "name": "Campus-LostNFound",
       "fork": false,
-      "bytes": 70133
+      "bytes": 193697
     },
     {
-      "name": "Cosmic_Overanalysis",
+      "name": "Cosmic-Overanalysis",
       "fork": false,
       "bytes": 49589
     },
     {
+      "name": "nyanpasu-louis",
+      "fork": false,
+      "bytes": 114585
+    },
+    {
       "name": "nyanpasu-louis.github.io",
       "fork": false,
-      "bytes": 110771
+      "bytes": 114762
     },
     {
       "name": "Scholarium",
@@ -24,27 +29,27 @@
       "bytes": 80125
     }
   ],
-  "totalBytes": 310618,
+  "totalBytes": 552758,
   "languages": [
     {
-      "name": "JavaScript",
-      "bytes": 111655,
-      "percent": 35.95
+      "name": "Python",
+      "bytes": 249302,
+      "percent": 45.1
     },
     {
-      "name": "Python",
-      "bytes": 107503,
-      "percent": 34.61
+      "name": "JavaScript",
+      "bytes": 222266,
+      "percent": 40.21
     },
     {
       "name": "CSS",
-      "bytes": 65936,
-      "percent": 21.23
+      "bytes": 56458,
+      "percent": 10.21
     },
     {
       "name": "HTML",
-      "bytes": 25524,
-      "percent": 8.22
+      "bytes": 24732,
+      "percent": 4.47
     }
   ]
 }
