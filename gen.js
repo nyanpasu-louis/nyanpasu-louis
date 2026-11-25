@@ -67,50 +67,7 @@ const LAYOUT = {
   CURSOR_RX: 1.5,
 };
 
-/* ── 开场开机日志：内核 → getty 登录 → cat README.md，随后整块淡出 ──── */
-
-const BOOT = {
-  FONT_SIZE: 13,
-  LINE_H: 19,
-  PAD_X: 14,
-  PAD_Y: 26,
-  START_MS: 100,        // 第一条内核日志出现前的空白
-  LINE_STEP_MS: 85,     // 相邻日志行的间隔
-  TYPE_STEP_MS: 40,     // 逐字打出的字符间隔
-  PAUSE_MS: 150,        // 一行打完到下一行的停顿
-  HOLD_MS: 300,         // 命令打完到开始淡出
-  FADE_MS: 360,         // 整块淡出的时长
-  GAP_MS: 80,           // 淡出结束到正文开始的空白
-};
-
-/** 内核日志：[时间戳, 文本]，按真实 dmesg 的风格排版 */
-const BOOT_KERNEL = [
-  ['0.000000', 'Booting GitHub_Profiles_README kernel 6.12.4-generic (tty1)'],
-  ['0.000000', 'Command line: root=/dev/nvme0n1p2 ro quiet'],
-  ['0.000148', 'Memory: 32768M/32768M available (8124K kernel code)'],
-  ['0.041233', 'smp: Brought up 16 CPUs'],
-  ['0.078411', 'ACPI: Core revision 20240827'],
-  ['0.112907', 'pci 0000:00:1f.3: audio device disabled by config'],
-  ['0.144871', 'usb 1-1: new high-speed USB device number 2 using xhci_hcd'],
-  ['0.203554', 'nvme nvme0: 8/0/0 default/read/poll queues'],
-  ['0.264190', 'EXT4-fs (nvme0n1p2): mounted (ordered data mode)'],
-  ['0.318802', 'systemd[1]: systemd 257.1-1 running in system mode'],
-];
-
-/** systemd 服务行，左列 [  OK  ] 用绿色 */
-const BOOT_SERVICES = [
-  'Started Journal Service.',
-  'Started udev Kernel Device Manager.',
-  'Reached target Multi-User System.',
-  'Started Getty on tty1.',
-];
-
-const BOOT_HOST = 'github-profiles-readme';
-const BOOT_USER = 'nyanpasulouis';
-const BOOT_PASSWORD = '*************';
-const BOOT_COMMAND = 'cat README.md';
-
-/** 文档标题 / 说明：只用于 <title> 和 README 的 alt，不渲染进画面 */
+/* ── 文档标题 / 说明：只用于 <title> 和 README 的 alt，不渲染进画面 ── */
 const DOCUMENT_TITLE = 'readme.md';
 const DOCUMENT_TAGLINE = 'a markdown file that types itself.';
 
@@ -261,7 +218,6 @@ const THEMES = {
     heat2: '#7c4664',
     heat3: '#b06f92',
     heat4: '#ffa8cd',
-    ok: '#7bd88f',
   },
   light: {
     bg: '#f8fafc',
@@ -280,7 +236,6 @@ const THEMES = {
     heat2: '#efa3c6',
     heat3: '#e070a2',
     heat4: '#cf3573',
-    ok: '#1f883d',
   },
 };
 
@@ -359,12 +314,11 @@ function warnMissingGlyphs(font, lines) {
 }
 
 /** 收集需要打进子集字体的字符（含空格） */
-function collectCodepoints(rows, extra = '') {
+function collectCodepoints(rows) {
   const codepoints = new Set([0x20]);
   for (const row of rows) {
     for (const c of row.chars) codepoints.add(c.char.codePointAt(0));
   }
-  for (const ch of extra) codepoints.add(ch.codePointAt(0));
   return [...codepoints];
 }
 
@@ -648,7 +602,7 @@ function languageSectionLines() {
   ];
 }
 
-/* ── `cat Personal attributes.json` 的输出（Level / local_time 构建期生成） ── */
+/* ── `cat Personal attributes.json` 的输出（Level 按构建日期计算） ── */
 
 const BIRTHDAY = { year: 2006, month: 2, day: 26 };
 
@@ -672,15 +626,6 @@ function currentLevel(date = new Date()) {
     now.month > BIRTHDAY.month ||
     (now.month === BIRTHDAY.month && now.day >= BIRTHDAY.day);
   return now.year - BIRTHDAY.year - (birthdayPassed ? 0 : 1);
-}
-
-function currentGmt8Time(date = new Date()) {
-  const t = gmt8Parts(date);
-  const pad = (n) => String(n).padStart(2, '0');
-  return (
-    `${t.year}-${pad(t.month)}-${pad(t.day)} ` +
-    `${pad(t.hour)}:${pad(t.minute)}:${pad(t.second)} (GMT+8)`
-  );
 }
 
 /** 左栏可用的等宽列数（780px 画布、中线居中、左右边距 30px） */
@@ -772,9 +717,8 @@ function personalAttributesSectionLines() {
     Level: currentLevel(),
     zodiac_sign: 'Pisces',
     romantic_orientation: 'Quoiromantic',
-    sexual_orientation: ['Graysexual-Heterosexual'],
+    sexual_orientation: ['Graysexual','Heterosexual'],
     frequent_ip_locations: ['Beijing CN', 'Tianjin CN'],
-    local_time: currentGmt8Time(),
     available_platforms: ['macOS', 'Windows', 'WSL'],
     email: 'jrlouis_cn@icloud.com',
     links: ['https://nyanpasu-louis.github.io', 'https://bonjour.bio/0421bv'],
@@ -1429,124 +1373,8 @@ function scheduleGroup(group, start) {
   return { ...group, start, end: lastDelay + TIME.LINE_HOLD, lastDelay };
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   4b. buildBootOverlay —— 开场那段 Unix 开机日志
-   ══════════════════════════════════════════════════════════════════
-   一块覆盖整幅画布的不透明分组：dmesg 风格的内核日志逐行落下，
-   getty 登录 / 密码 / cat 命令逐字打出，最后整组淡出，
-   正文的时间轴从 boot.duration 之后才接上。
-*/
-
-/**
- * @param {ReturnType<typeof layout>} doc
- * @returns {{ items: Array<object>, cursors: Array<object>, fadeAt: number, duration: number }}
- */
-function buildBootOverlay(doc) {
-  const charW = (doc.charW * BOOT.FONT_SIZE) / LAYOUT.FONT_SIZE;
-  const items = [];
-  const cursors = [];
-  let t = BOOT.START_MS;
-  let row = 0;
-
-  const baseline = () => BOOT.PAD_Y + row * BOOT.LINE_H;
-
-  const put = (col, text, cls, delay) => {
-    items.push({
-      x: Number((BOOT.PAD_X + col * charW).toFixed(2)),
-      y: baseline(),
-      text,
-      cls,
-      delay: roundMs(delay),
-    });
-  };
-
-  /** 整行瞬时出现（内核日志 / 服务状态） */
-  const print = (runs) => {
-    let col = 0;
-    for (const run of runs) {
-      put(col, run.text, run.cls, t);
-      col += run.text.length;
-    }
-    row += 1;
-    t += BOOT.LINE_STEP_MS;
-  };
-
-  /** 前缀瞬时出现，正文逐字打出；行尾可带一个方块光标 */
-  const type = (runs, typed, { cursor = false } = {}) => {
-    let col = 0;
-    for (const run of runs) {
-      put(col, run.text, run.cls, t);
-      col += run.text.length;
-    }
-    const typedFrom = col;
-    const chars = Array.from(typed);
-    let end = t;
-    chars.forEach((ch, index) => {
-      end = t + (index + 1) * BOOT.TYPE_STEP_MS;
-      put(typedFrom + index, ch, 'boot-body', end);
-    });
-    if (cursor) {
-      cursors.push({
-        x: Number((BOOT.PAD_X + (typedFrom + chars.length) * charW).toFixed(2)),
-        y: baseline() - BOOT.FONT_SIZE + 2,
-        width: charW,
-        height: BOOT.FONT_SIZE,
-        delay: roundMs(end),
-      });
-    }
-    row += 1;
-    t = end + BOOT.PAUSE_MS;
-    return end;
-  };
-
-  for (const [stamp, text] of BOOT_KERNEL) {
-    print([
-      { text: `[${stamp.padStart(12)}] `, cls: 'boot-dim' },
-      { text, cls: 'boot-body' },
-    ]);
-  }
-  for (const text of BOOT_SERVICES) {
-    print([
-      { text: '[  ', cls: 'boot-dim' },
-      { text: 'OK', cls: 'boot-ok' },
-      { text: '  ] ', cls: 'boot-dim' },
-      { text, cls: 'boot-body' },
-    ]);
-  }
-
-  print([]);
-  print([{ text: 'GitHub_Profiles_README 6.12.4 tty1', cls: 'boot-accent' }]);
-  print([]);
-
-  type([{ text: `${BOOT_HOST} login: `, cls: 'boot-dim' }], BOOT_USER, { cursor: true });
-  type([{ text: 'Password: ', cls: 'boot-dim' }], BOOT_PASSWORD);
-  print([]);
-
-  const typedEnd = type(
-    [
-      { text: BOOT_USER, cls: 'boot-cmd' },
-      { text: '@', cls: 'boot-dim' },
-      { text: BOOT_HOST, cls: 'boot-accent' },
-      { text: ':', cls: 'boot-dim' },
-      { text: '~', cls: 'boot-accent' },
-      { text: '$ ', cls: 'boot-cmd' },
-    ],
-    BOOT_COMMAND,
-    { cursor: true },
-  );
-
-  const fadeAt = typedEnd + BOOT.HOLD_MS;
-  return {
-    items,
-    cursors,
-    fadeAt: roundMs(fadeAt),
-    duration: roundMs(fadeAt + BOOT.FADE_MS + BOOT.GAP_MS),
-  };
-}
-
 function compileTimeline(doc) {
-  const boot = buildBootOverlay(doc);
-  let clock = TIME.START_DELAY + boot.duration;
+  let clock = TIME.START_DELAY;
   const lineGroups = [];
   const source = doc.lineGroups;
 
@@ -1619,7 +1447,7 @@ function compileTimeline(doc) {
   // 并行命令可在相近时间结束，光标等全部行都打完再出现
   const typeEnd = lineGroups.reduce(
     (max, group) => Math.max(max, group.end),
-    TIME.START_DELAY + boot.duration,
+    TIME.START_DELAY,
   );
   const cursorDelay = typeEnd;
   const wrapped = Boolean(
@@ -1652,7 +1480,6 @@ function compileTimeline(doc) {
     rows,
     lineGroups,
     cursor,
-    boot,
     total,
     charCount,
     typeEnd,
@@ -1677,10 +1504,9 @@ function emitSvg(plan) {
   const bannerTop = bannerRow ? bannerRow.top : 0;
   const cell = BANNER.CELL;
 
-  // 只嵌入这份文档实际用到的字形（正文 + 开机日志）
+  // 只嵌入这份文档实际用到的字形
   const font = getFont();
-  const bootText = plan.boot.items.map((item) => item.text).join('');
-  const fontSubset = font.subset(collectCodepoints(rows, bootText));
+  const fontSubset = font.subset(collectCodepoints(rows));
   const fontData = fontSubset.toString('base64');
   const fontKb = (fontSubset.length / 1024).toFixed(1);
 
@@ -1689,7 +1515,7 @@ function emitSvg(plan) {
   out.push('<?xml version="1.0" encoding="UTF-8"?>');
   out.push(
     `<!-- generated by gen.js · ${plan.charCount} chars · ${plan.total}ms · ` +
-      `boot ${plan.boot.items.length} segments · JetBrains Mono subset ${fontKb} KB · ` +
+      `JetBrains Mono subset ${fontKb} KB · ` +
       `CSS only, no SMIL/JS -->`,
   );
   out.push(
@@ -1702,9 +1528,7 @@ function emitSvg(plan) {
     `  <title id="tty-title">${escapeXml(DOCUMENT_TITLE)} - a markdown file that types itself</title>`,
   );
   out.push(
-    '  <desc id="tty-desc">A terminal that opens with a Unix boot log: dmesg-style kernel ' +
-      'messages, a getty login as louis with a masked password, and a typed cat README.md, ' +
-      'after which the whole console fades out. Then a zsh prompt runs fastfetch with a ' +
+    '  <desc id="tty-desc">A terminal where a zsh prompt runs fastfetch with a ' +
       'block-letter Nyanpasu / Louis banner, a language bar and a pink contribution heatmap. ' +
       'After two cat commands are typed in parallel, a second two-column section shows a JSON ' +
       'personal-attributes file on the left and an MBTI result with four proportion bars plus ' +
@@ -1760,7 +1584,6 @@ function emitSvg(plan) {
   out.push('');
   out.push('    @keyframes appear { 0% { opacity: 0 } 100% { opacity: 1 } }');
   out.push('    @keyframes blink  { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }');
-  out.push('    @keyframes boot-out { 0% { opacity: 1 } 100% { opacity: 0 } }');
   out.push('');
   out.push('    .ch {');
   out.push('      opacity: 0;');
@@ -1809,24 +1632,6 @@ function emitSvg(plan) {
   out.push('    .columns-rule { stroke: var(--divider); stroke-width: 1; opacity: 0; ' +
     'animation: appear 1ms step-start both }');
   out.push('');
-  out.push('    /* 开场开机日志：整组在 boot 结束后淡出 */');
-  out.push(`    .boot { animation: boot-out ${BOOT.FADE_MS}ms linear both }`);
-  out.push('    .boot-ch {');
-  out.push('      opacity: 0;');
-  out.push('      animation: appear 1ms step-start both;');
-  out.push(`      font-family: ${FONT.STACK};`);
-  out.push(`      font-size: ${BOOT.FONT_SIZE}px;`);
-  out.push('      font-variant-ligatures: none;');
-  out.push('      white-space: pre;');
-  out.push('    }');
-  out.push('    .boot-dim    { fill: var(--mark) }');
-  out.push('    .boot-body   { fill: var(--body) }');
-  out.push('    .boot-ok     { fill: var(--ok); font-weight: 600 }');
-  out.push('    .boot-accent { fill: var(--heading) }');
-  out.push('    .boot-cmd    { fill: var(--cmd) }');
-  out.push('    .boot-cursor { opacity: 0; fill: var(--cmd); ' +
-    `animation: blink ${TIME.CURSOR_BLINK_MS}ms steps(1) infinite }`);
-  out.push('');
   out.push('    /* 延迟结束前保持 opacity:0（不写 fill-mode，避免反向填充把光标提前点亮） */');
   out.push('    .cursor {');
   out.push('      opacity: 0;');
@@ -1841,7 +1646,6 @@ function emitSvg(plan) {
   out.push('      .langbar-cell { opacity: 1; animation: none }');
   out.push('      .columns-rule { opacity: 1; animation: none }');
   out.push('      .cursor { opacity: 1; animation: none }');
-  out.push('      .boot { display: none }');
   out.push('    }');
   out.push('  </style>');
 
@@ -1914,28 +1718,6 @@ function emitSvg(plan) {
     `  <rect class="cursor" x="${cursor.x}" y="${cursor.y}" width="${cursor.width}" ` +
       `height="${cursor.height}" rx="${LAYOUT.CURSOR_RX}" style="animation-delay:${cursor.delay}ms"/>`,
   );
-
-  // 开机日志：盖在正文之上，正文时间轴已整体后移到 boot.duration 之后
-  const boot = plan.boot;
-  out.push(
-    `  <!-- boot log · ${boot.items.length} glyphs · fades out at ${boot.fadeAt}ms · ` +
-      `content starts at ${boot.duration}ms -->`,
-  );
-  out.push(`  <g class="boot" aria-hidden="true" style="animation-delay:${boot.fadeAt}ms">`);
-  out.push(`    <rect class="tty-bg" x="0" y="0" width="${width}" height="${height}"/>`);
-  for (const item of boot.items) {
-    out.push(
-      `    <text class="boot-ch ${item.cls}" style="animation-delay:${item.delay}ms" ` +
-        `x="${item.x}" y="${item.y}" xml:space="preserve">${escapeXml(item.text)}</text>`,
-    );
-  }
-  for (const block of boot.cursors) {
-    out.push(
-      `    <rect class="boot-cursor" x="${block.x}" y="${block.y}" width="${block.width}" ` +
-        `height="${block.height}" rx="${LAYOUT.CURSOR_RX}" style="animation-delay:${block.delay}ms"/>`,
-    );
-  }
-  out.push('  </g>');
 
   out.push('</svg>');
   out.push('');
@@ -2093,10 +1875,6 @@ function main() {
         `  contribs   : ${contribStats.total}  (${contribStats.weeks.length} weeks)`,
       );
     }
-    console.log(
-      `  boot       : ${plan.boot.items.length} 段文字 · ${seconds(plan.boot.fadeAt)} 起淡出 · ` +
-        `${seconds(plan.boot.duration)} 后正文进场`,
-    );
     console.log(
       `  banner     : ${BANNER.WORDS.join(' / ')}  ` +
         `(${BANNER_COLS} × ${BANNER_ROWS.length} 点阵 · ${BANNER_CELLS} 个 ▩)`,
