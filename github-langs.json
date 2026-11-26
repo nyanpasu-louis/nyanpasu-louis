@@ -1,6 +1,6 @@
 {
   "user": "nyanpasu-louis",
-  "fetchedAt": "2026-11-25T00:33:20.188Z",
+  "fetchedAt": "2026-11-26T00:09:12.584Z",
   "repoCount": 5,
   "repos": [
     {
@@ -16,7 +16,7 @@
     {
       "name": "nyanpasu-louis",
       "fork": false,
-      "bytes": 114585
+      "bytes": 99690
     },
     {
       "name": "nyanpasu-louis.github.io",
@@ -29,27 +29,27 @@
       "bytes": 80125
     }
   ],
-  "totalBytes": 552758,
+  "totalBytes": 537863,
   "languages": [
     {
       "name": "Python",
       "bytes": 249302,
-      "percent": 45.1
+      "percent": 46.35
     },
     {
       "name": "JavaScript",
-      "bytes": 222266,
-      "percent": 40.21
+      "bytes": 213975,
+      "percent": 39.78
     },
     {
       "name": "CSS",
       "bytes": 56458,
-      "percent": 10.21
+      "percent": 10.5
     },
     {
       "name": "HTML",
-      "bytes": 24732,
-      "percent": 4.47
+      "bytes": 18128,
+      "percent": 3.37
     }
   ]
 }

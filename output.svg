@@ -550,10 +550,10 @@
   </g>
   <!-- language bar · 328px wide, starts at 420px -->
   <g class="langbar" aria-hidden="true">
-    <rect class="langbar-cell lang-py" x="420" y="176" width="151" height="14" style="animation-delay:1600ms"/>
-    <rect class="langbar-cell lang-js" x="571" y="176" width="131" height="14" style="animation-delay:1690ms"/>
-    <rect class="langbar-cell lang-css" x="702" y="176" width="33" height="14" style="animation-delay:1780ms"/>
-    <rect class="langbar-cell lang-html" x="735" y="176" width="13" height="14" style="animation-delay:1870ms"/>
+    <rect class="langbar-cell lang-py" x="420" y="176" width="154" height="14" style="animation-delay:1600ms"/>
+    <rect class="langbar-cell lang-js" x="574" y="176" width="131" height="14" style="animation-delay:1690ms"/>
+    <rect class="langbar-cell lang-css" x="705" y="176" width="33" height="14" style="animation-delay:1780ms"/>
+    <rect class="langbar-cell lang-html" x="738" y="176" width="10" height="14" style="animation-delay:1870ms"/>
   </g>
   <!-- line 00 · langs · right · first char at 2180ms, last at 2740ms -->
   <g>
@@ -561,7 +561,7 @@
     <text class="ch lang-py" style="animation-delay:2200ms" x="429" y="217" xml:space="preserve">y</text>
     <text class="ch lang-py" style="animation-delay:2220ms" x="438" y="217" xml:space="preserve"> </text>
     <text class="ch lang-py" style="animation-delay:2240ms" x="447" y="217" xml:space="preserve">4</text>
-    <text class="ch lang-py" style="animation-delay:2260ms" x="456" y="217" xml:space="preserve">6</text>
+    <text class="ch lang-py" style="animation-delay:2260ms" x="456" y="217" xml:space="preserve">7</text>
     <text class="ch lang-py" style="animation-delay:2280ms" x="465" y="217" xml:space="preserve">%</text>
     <text class="ch md-body" style="animation-delay:2300ms" x="474" y="217" xml:space="preserve"> </text>
     <text class="ch lang-js" style="animation-delay:2320ms" x="483" y="217" xml:space="preserve">J</text>
@@ -584,7 +584,7 @@
     <text class="ch lang-html" style="animation-delay:2660ms" x="636" y="217" xml:space="preserve">M</text>
     <text class="ch lang-html" style="animation-delay:2680ms" x="645" y="217" xml:space="preserve">L</text>
     <text class="ch lang-html" style="animation-delay:2700ms" x="654" y="217" xml:space="preserve"> </text>
-    <text class="ch lang-html" style="animation-delay:2720ms" x="663" y="217" xml:space="preserve">4</text>
+    <text class="ch lang-html" style="animation-delay:2720ms" x="663" y="217" xml:space="preserve">3</text>
     <text class="ch lang-html" style="animation-delay:2740ms" x="672" y="217" xml:space="preserve">%</text>
   </g>
   <!-- line 00 · heading · right · first char at 3660ms, last at 4180ms -->
@@ -846,7 +846,7 @@
     <rect class="heat-cell heat-0" x="740" y="289" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
     <rect class="heat-cell heat-1" x="740" y="299" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
     <rect class="heat-cell heat-2" x="740" y="309" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
-    <rect class="heat-cell heat-0" x="740" y="319" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
+    <rect class="heat-cell heat-1" x="740" y="319" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
     <rect class="heat-cell heat-0" x="740" y="329" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
     <rect class="heat-cell heat-0" x="740" y="339" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
     <rect class="heat-cell heat-0" x="740" y="349" width="8" height="8" rx="1" style="animation-delay:4808ms"/>
